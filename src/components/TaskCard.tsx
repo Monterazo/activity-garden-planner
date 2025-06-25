@@ -15,24 +15,16 @@ interface TaskCardProps {
   onDelete: () => void;
   onDragStart: () => void;
   isDragging: boolean;
+  statusColor: string;
 }
 
-export const TaskCard = ({ task, onEdit, onDelete, onDragStart, isDragging }: TaskCardProps) => {
-  const getPriorityColor = (priority: string) => {
+export const TaskCard = ({ task, onEdit, onDelete, onDragStart, isDragging, statusColor }: TaskCardProps) => {
+  const getPriorityText = (priority: string) => {
     switch (priority) {
-      case 'high': return 'bg-red-100 text-red-800 border-red-200';
-      case 'medium': return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'low': return 'bg-green-100 text-green-800 border-green-200';
-      default: return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (task.status) {
-      case 'pending': return 'from-red-500 to-red-600';
-      case 'in-progress': return 'from-blue-500 to-blue-600';
-      case 'completed': return 'from-green-500 to-green-600';
-      default: return 'from-gray-500 to-gray-600';
+      case 'high': return 'Alta';
+      case 'medium': return 'Média';
+      case 'low': return 'Baixa';
+      default: return priority;
     }
   };
 
@@ -40,16 +32,36 @@ export const TaskCard = ({ task, onEdit, onDelete, onDragStart, isDragging }: Ta
     <div
       draggable
       onDragStart={onDragStart}
-      className={`bg-gray-700 rounded-lg p-4 cursor-move transition-all duration-200 hover:bg-gray-650 border-l-4 bg-gradient-to-r ${getStatusColor()} ${
+      className={`rounded-lg p-6 cursor-move transition-all duration-200 font-open-sans ${
         isDragging ? 'opacity-50 scale-95' : 'opacity-100 scale-100'
       }`}
+      style={{
+        width: '320px',
+        backgroundColor: statusColor,
+        boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.12), 0px 16px 32px rgba(0, 0, 0, 0.08)',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-start',
+        gap: '8px'
+      }}
     >
-      <div className="flex justify-between items-start mb-3">
-        <h3 className="text-white font-semibold text-lg">{task.title}</h3>
+      <div className="flex justify-between items-start mb-2 w-full">
+        <h3 
+          className="text-white font-semibold"
+          style={{ 
+            fontSize: '16px', 
+            lineHeight: '150%',
+            fontWeight: 600,
+            width: '272px',
+            height: '24px'
+          }}
+        >
+          {task.title}
+        </h3>
         
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="text-gray-400 hover:text-white">
+            <Button variant="ghost" size="sm" className="text-white hover:text-gray-200 p-1">
               <MoreHorizontal className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
@@ -69,20 +81,46 @@ export const TaskCard = ({ task, onEdit, onDelete, onDragStart, isDragging }: Ta
         </DropdownMenu>
       </div>
 
-      <p className="text-gray-300 text-sm mb-3 line-clamp-3">
-        {task.description}
-      </p>
-
-      <div className="flex justify-between items-center">
-        <span 
-          className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`}
+      {task.description && (
+        <p 
+          className="text-white opacity-75"
+          style={{ 
+            fontSize: '14px', 
+            lineHeight: '140%',
+            fontWeight: 400,
+            width: '272px'
+          }}
         >
-          {task.priority === 'high' ? 'Alta' : task.priority === 'medium' ? 'Média' : 'Baixa'}
-        </span>
-        
-        <span className="text-xs text-gray-500">
-          {new Date(task.createdAt).toLocaleDateString('pt-BR')}
-        </span>
+          {task.description}
+        </p>
+      )}
+
+      <div 
+        className="flex flex-row items-center gap-2 pt-1"
+        style={{ 
+          padding: '4px 0px',
+          gap: '8px'
+        }}
+      >
+        <div 
+          className="border border-white border-opacity-75 rounded-sm px-2 py-0.5"
+          style={{
+            padding: '2px 8px',
+            gap: '10px',
+            borderRadius: '2px'
+          }}
+        >
+          <span 
+            className="text-white opacity-75 text-sm"
+            style={{ 
+              fontSize: '14px', 
+              lineHeight: '140%',
+              fontWeight: 400
+            }}
+          >
+            {getPriorityText(task.priority)}
+          </span>
+        </div>
       </div>
     </div>
   );

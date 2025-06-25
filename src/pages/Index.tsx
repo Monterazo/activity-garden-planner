@@ -5,6 +5,7 @@ import { TaskFilter } from '@/components/TaskFilter';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { Task, TaskStatus, TaskPriority } from '@/types/task';
+
 const Index = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -92,31 +93,58 @@ const Index = () => {
     const matchesSearch = task.title.toLowerCase().includes(searchTerm.toLowerCase()) || task.description.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesStatus && matchesPriority && matchesSearch;
   });
-  return <div className="min-h-screen bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-8 bg-black">
+  return (
+    <div className="min-h-screen bg-black font-open-sans">
+      <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="flex flex-col gap-6 mb-8">
           <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <h1 className="text-4xl font-bold">Kanban</h1>
-            <Button onClick={handleNewTask} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg flex items-center gap-2">
-              <Plus className="w-5 h-5" />
+            <h1 className="text-4xl font-bold text-white" style={{ fontSize: '37px', lineHeight: '44px' }}>
+              Kanban
+            </h1>
+            <Button 
+              onClick={handleNewTask} 
+              className="bg-[#2C2C2C] hover:bg-[#3C3C3C] text-[#F5F5F5] px-3 py-2 rounded-lg flex items-center gap-2 border border-[#2C2C2C]"
+              style={{ height: '40px', width: '137px' }}
+            >
+              <Plus className="w-4 h-4" />
               Nova atividade
             </Button>
           </div>
 
           {/* Filters */}
-          <TaskFilter searchTerm={searchTerm} onSearchChange={setSearchTerm} filterStatus={filterStatus} onStatusChange={setFilterStatus} filterPriority={filterPriority} onPriorityChange={setFilterPriority} />
+          <TaskFilter 
+            searchTerm={searchTerm} 
+            onSearchChange={setSearchTerm} 
+            filterStatus={filterStatus} 
+            onStatusChange={setFilterStatus} 
+            filterPriority={filterPriority} 
+            onPriorityChange={setFilterPriority} 
+          />
         </div>
 
         {/* Kanban Board */}
-        <KanbanBoard tasks={filteredTasks} onTaskStatusChange={handleTaskStatusChange} onTaskEdit={handleEditTask} onTaskDelete={handleDeleteTask} />
+        <KanbanBoard 
+          tasks={filteredTasks} 
+          onTaskStatusChange={handleTaskStatusChange} 
+          onTaskEdit={handleEditTask} 
+          onTaskDelete={handleDeleteTask} 
+        />
 
         {/* Task Modal */}
-        <TaskModal isOpen={isModalOpen} onClose={() => {
-        setIsModalOpen(false);
-        setSelectedTask(null);
-      }} task={selectedTask} onSave={selectedTask ? handleUpdateTask : handleCreateTask} onDelete={selectedTask ? handleDeleteTask : undefined} />
+        <TaskModal 
+          isOpen={isModalOpen} 
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedTask(null);
+          }} 
+          task={selectedTask} 
+          onSave={selectedTask ? handleUpdateTask : handleCreateTask} 
+          onDelete={selectedTask ? handleDeleteTask : undefined} 
+        />
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
