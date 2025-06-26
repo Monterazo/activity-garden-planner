@@ -18,7 +18,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Label } from '@/components/ui/label';
-import { Trash2 } from 'lucide-react';
 
 interface TaskModalProps {
   isOpen: boolean;
@@ -75,12 +74,81 @@ export const TaskModal = ({ isOpen, onClose, task, onSave, onDelete }: TaskModal
     }
   };
 
+  // Se estamos editando uma tarefa, mostra o layout da primeira imagem
+  if (task) {
+    return (
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="bg-gray-800 border-gray-600 text-white max-w-4xl p-8">
+          <div className="space-y-6">
+            {/* Header com título e controles */}
+            <div className="flex justify-between items-start">
+              <h1 className="text-4xl font-bold text-white font-open-sans">
+                {task.title}
+              </h1>
+              
+              <div className="flex items-center gap-4">
+                {/* Dropdown de Status */}
+                <Select value={status} onValueChange={(value: TaskStatus) => setStatus(value)}>
+                  <SelectTrigger className="bg-gray-700 border-gray-600 text-white w-40">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-700 border-gray-600">
+                    <SelectItem value="pending" className="text-white hover:bg-gray-600">
+                      Pendente
+                    </SelectItem>
+                    <SelectItem value="in-progress" className="text-white hover:bg-gray-600">
+                      Realizando
+                    </SelectItem>
+                    <SelectItem value="completed" className="text-white hover:bg-gray-600">
+                      Concluída
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                {/* Botão Deletar atividade */}
+                <Button
+                  onClick={handleDelete}
+                  className="bg-red-600 hover:bg-red-700 text-white px-6"
+                >
+                  Deletar atividade
+                </Button>
+
+                {/* Botão Editar informações */}
+                <Button
+                  onClick={handleSave}
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-6"
+                >
+                  Editar informações
+                </Button>
+              </div>
+            </div>
+
+            {/* Seção Descrição */}
+            <div className="space-y-4">
+              <Label className="text-white text-lg font-semibold">Descrição</Label>
+              <Textarea
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="bg-gray-700 border-gray-600 text-white min-h-[200px] resize-none"
+                placeholder="Digite a descrição da atividade"
+              />
+            </div>
+
+            {/* Campo de Prioridade (oculto mas mantido para funcionalidade) */}
+            <input type="hidden" value={priority} />
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Para criar nova tarefa, mantém o layout original
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="bg-gray-800 border-gray-600 text-white max-w-md">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold">
-            {task ? 'Editar Atividade' : 'Nova Atividade'}
+            Nova Atividade
           </DialogTitle>
         </DialogHeader>
 
@@ -158,34 +226,21 @@ export const TaskModal = ({ isOpen, onClose, task, onSave, onDelete }: TaskModal
           </div>
         </div>
 
-        <div className="flex justify-between pt-4">
-          {task && onDelete && (
-            <Button
-              onClick={handleDelete}
-              variant="destructive"
-              className="bg-red-600 hover:bg-red-700"
-            >
-              <Trash2 className="w-4 h-4 mr-2" />
-              Deletar
-            </Button>
-          )}
-          
-          <div className="flex gap-2 ml-auto">
-            <Button
-              onClick={onClose}
-              variant="outline"
-              className="border-gray-600 text-gray-300 hover:bg-gray-700"
-            >
-              Cancelar
-            </Button>
-            <Button
-              onClick={handleSave}
-              disabled={!title.trim()}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              {task ? 'Salvar' : 'Criar'}
-            </Button>
-          </div>
+        <div className="flex gap-2 justify-end pt-4">
+          <Button
+            onClick={onClose}
+            variant="outline"
+            className="border-gray-600 text-gray-300 hover:bg-gray-700"
+          >
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleSave}
+            disabled={!title.trim()}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            Criar
+          </Button>
         </div>
       </DialogContent>
     </Dialog>
