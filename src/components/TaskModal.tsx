@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Task, TaskStatus, TaskPriority } from '@/types/task';
 import {
@@ -74,12 +73,12 @@ export const TaskModal = ({ isOpen, onClose, task, onSave, onDelete }: TaskModal
     }
   };
 
-  // Se estamos editando uma tarefa, mostra o layout da primeira imagem
+  // Se estamos editando uma tarefa, mostra o layout em tela cheia
   if (task) {
     return (
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="bg-gray-800 border-gray-600 text-white max-w-4xl p-8">
-          <div className="space-y-6">
+        <DialogContent className="bg-gray-800 border-gray-600 text-white w-screen h-screen max-w-none p-8 rounded-none">
+          <div className="space-y-6 h-full">
             {/* Header com título e controles */}
             <div className="flex justify-between items-start">
               <h1 className="text-4xl font-bold text-white font-open-sans">
@@ -124,12 +123,12 @@ export const TaskModal = ({ isOpen, onClose, task, onSave, onDelete }: TaskModal
             </div>
 
             {/* Seção Descrição */}
-            <div className="space-y-4">
+            <div className="space-y-4 flex-1">
               <Label className="text-white text-lg font-semibold">Descrição</Label>
               <Textarea
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-gray-700 border-gray-600 text-white min-h-[200px] resize-none"
+                className="bg-gray-700 border-gray-600 text-white min-h-[400px] resize-none"
                 placeholder="Digite a descrição da atividade"
               />
             </div>
